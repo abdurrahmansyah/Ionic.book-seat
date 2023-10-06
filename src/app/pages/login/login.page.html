@@ -1,0 +1,38 @@
+<ion-content>
+  <!-- <div class="header ion-text-center">
+    <img src="../../../assets/images/img-1.png">
+  </div>
+  <div class="footer ion-text-center">
+    <ion-button (click)="ToHome()">To Home</ion-button>
+    <ion-button (click)="BackToLogin()">Back To Login</ion-button>
+  </div> -->
+
+  <div class="center">
+    <div class="ion-text-center">
+      <ion-text style="font-size: 40px; font-weight: 700;" color="primary">Login Booking Seat</ion-text>
+      <hr style="height: 20px;">
+      <img src="../../../assets/images/img-1.png">
+      <hr style="height: 20px;">
+
+      <!-- <ion-text style="font-size: 20px; font-weight: 700;" color="primary">Login</ion-text> -->
+      <ion-list [inset]="true" mode="ios">
+        <ion-item lines="none">
+          <ion-input type="text" placeholder="Email" [(ngModel)]="email" required>
+          </ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-list [inset]="true" mode="ios">
+        <ion-item lines="none">
+          <ion-input type="password" placeholder="Password" [(ngModel)]="password" required>
+          </ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-list [inset]="true" mode="ios">
+        <ion-item color="primary" button (click)="Login()" lines="none">
+          <ion-label>Login</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

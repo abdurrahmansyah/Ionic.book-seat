@@ -1,0 +1,54 @@
+<ion-content>
+  <div class="flexContainer">
+    <div style="padding: 50px 30px 0px 30px;">
+      <ion-text style="font-size: 30px; font-weight: 700;">Book Your Seat</ion-text>
+    </div>
+    <img class="ion-margin" style="border-radius: 10px;" src="../../../assets/images/img-2.png">
+    <div class="scrollYnew ion-padding">
+      <div *ngFor="let x of seatDataList">
+        <ion-accordion-group mode="md" expand="inset">
+          <ion-accordion value="asesmen">
+            <ion-item *ngIf="!x.bookedSeatData" slot="header" color="primary">{{x.name}}</ion-item>
+            <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
+            <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
+              <ion-label>
+                {{x.bookedSeatData.employee_id[1]}}
+                <p>{{x.bookedSeatData.book_datetime}}</p>
+              </ion-label>
+            </ion-item>
+          </ion-accordion>
+        </ion-accordion-group>
+      </div>
+    </div>
+  </div>
+
+  <ion-fab *ngIf="!bookedSeatData" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="ScanAndBook()" color="secondary">
+      <ion-icon name="scan"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <!-- <ion-fab *ngIf="!bookedSeatData" vertical="bottom" horizontal="start">
+    <ion-fab-button (click)="ScanSementara()" color="secondary">
+      <ion-icon name="scan"></ion-icon>
+    </ion-fab-button>
+  </ion-fab> -->
+
+  <div *ngIf="bookedSeatData" class="ion-text-center" style="position: absolute; bottom: 0px; width: 100%;">
+    <div class="ion-margin">
+      <ion-item color="secondary" lines="none" button (click)="ScanOnly()">
+        <ion-label>
+          <strong>{{bookedSeatData.employee_id[1]}} - {{bookedSeatData.code_id[1]}}</strong>
+          <p>{{bookedSeatData.book_datetime}}</p>
+        </ion-label>
+        <ion-icon name="scan" slot="end"></ion-icon>
+      </ion-item>
+    </div>
+
+    <!-- <div class="ion-text-center ion-margin">
+      <ion-text>{{bookedSeatData.employee_id[1]}}</ion-text>
+    </div> -->
+    <!-- <div class="ion-text-center"  style="border-radius: 20px; background-color: blue; width: 90%;" class="ion-padding ">
+      <ion-text>{{bookedSeatData.employee_id[1]}}</ion-text>
+    </div> -->
+  </div>
+</ion-content>

@@ -1,0 +1,7 @@
+{
+  "name": "book-seat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
