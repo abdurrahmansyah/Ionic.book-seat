@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.hutamakarya.bookseat',
   appName: 'book-seat',
   webDir: 'www',
   server: {

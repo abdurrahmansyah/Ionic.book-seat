@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">book-seat</string>
     <string name="title_activity_main">book-seat</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="package_name">com.hutamakarya.bookseat</string>
+    <string name="custom_url_scheme">com.hutamakarya.bookseat</string>
 </resources>
