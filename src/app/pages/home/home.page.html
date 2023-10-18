@@ -35,7 +35,7 @@
 
   <div *ngIf="bookedSeatData" class="ion-text-center" style="position: absolute; bottom: 0px; width: 100%;">
     <div class="ion-margin">
-      <ion-item color="secondary" lines="none" button (click)="ScanOnly()">
+      <ion-item color="secondary" lines="none" button (click)="ScanOnlyOrWithdraw()">
         <ion-label>
           <strong>{{bookedSeatData.employee_id[1]}} - {{bookedSeatData.code_id[1]}}</strong>
           <p>{{bookedSeatData.book_datetime}}</p>

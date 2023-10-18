@@ -7,7 +7,7 @@ export var url = {
 export var dataTemp = {
     status: {
         'active': 'active',
-        'archive': 'archive',
+        'inactive': 'inactive',
     },
     route: {
         'login': '/login',

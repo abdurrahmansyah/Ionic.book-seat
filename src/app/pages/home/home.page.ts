@@ -172,18 +172,22 @@ export class HomePage implements OnInit {
     }
   }
 
-  async ScanOnly() {
+  async ScanOnlyOrWithdraw() {
     const loading = await this.loadingController.create();
     await loading.present();
 
     try {
+      // const code = 'SIT005';
       const code = await this.ScanBarcode();
       const seat = await this.GetSeatByCode(code);
       var bookSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
 
       await loading.dismiss();
 
-      if (bookSeatData) this.globalService.LogAlert('Meja sedang digunakan oleh ' + bookSeatData.employee_id[1], bookSeatData.code_id[1]);
+      if (bookSeatData) {
+        if (bookSeatData.employee_id[0] == this.globalService.userData.id) await this.WithdrawBookSeat(bookSeatData);
+        else this.globalService.LogAlert('Meja sedang digunakan oleh ' + bookSeatData.employee_id[1], bookSeatData.code_id[1]);
+      }
       else this.globalService.LogAlert('Meja siap digunakan', seat.name);
 
     } catch (e: any) {
@@ -262,6 +266,51 @@ export class HomePage implements OnInit {
 
             this.InitializeData();
             this.globalService.LogToast('Berhasil book');
+            await loading.dismiss();
+          } catch (error: any) {
+            await loading.dismiss();
+            throw new Error(error);
+          }
+        }
+      }]
+    }).then(alert => {
+      return alert.present();
+    });
+  }
+
+  async WithdrawBookSeat(bookSeatData: BookSeatData) {
+    await this.alertController.create({
+      mode: 'ios',
+      header: bookSeatData.code_id[1],
+      message: 'Anda sedang menggunakan meja ini, Apakah anda ingin melakukan withdraw?',
+      buttons: [{
+        text: 'CANCEL',
+        role: 'Cancel'
+      }, {
+        text: 'YES',
+        handler: async () => {
+          const loading = await this.loadingController.create();
+          await loading.present();
+
+          try {
+            bookSeatData.employee_id = bookSeatData.employee_id[0];
+            bookSeatData.code_id = bookSeatData.code_id[0];
+            bookSeatData.status = dataTemp.status.inactive;
+
+            console.log('bookSeatData', bookSeatData);
+            const id = this.fetchService.UpdateBookSeat(bookSeatData);
+            var result: any = await new Promise(resolve => {
+              id.pipe(take(1)).subscribe((data: any) => {
+                resolve(data);
+              })
+            })
+
+            console.log('result', result);
+
+            if (!result) throw new Error('Gagal withdraw');
+
+            this.InitializeData();
+            this.globalService.LogToast('Berhasil withdraw');
             await loading.dismiss();
           } catch (error: any) {
             await loading.dismiss();
