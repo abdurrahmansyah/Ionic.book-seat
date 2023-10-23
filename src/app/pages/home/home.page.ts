@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { async } from '@angular/core/testing';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, Platform } from '@ionic/angular';
 import { take } from 'rxjs';
 import { dataTemp } from 'src/app/dataTemp';
 import { BookSeatData, FetchService, SeatData } from 'src/app/services/fetch.service';
@@ -20,18 +20,27 @@ export class HomePage implements OnInit {
   isAlreadyBook: boolean = false;
   bookedSeatData: BookSeatData | undefined;
 
+  isIOS: boolean = false;
+
   constructor(
     private fetchService: FetchService,
     private globalService: GlobalService,
     private alertController: AlertController,
-    private loadingController: LoadingController) { }
+    private loadingController: LoadingController,
+    public platform: Platform) { }
 
   async ngOnInit() {
     try {
+      await this.InitializeApp();
       await this.InitializeData();
     } catch (error: any) {
       this.globalService.LogAlert(error);
     }
+  }
+
+  async InitializeApp() {
+    const requestPermissions = await BarcodeScanner.requestPermissions();
+    this.isIOS = this.platform.is('ios') ? true : false;
   }
 
   async InitializeData() {
@@ -202,6 +211,7 @@ export class HomePage implements OnInit {
   }
 
   async CheckAndInstallGoogleBarcodeScanner() {
+    if (this.isIOS) return;
     const available: IsGoogleBarcodeScannerModuleAvailableResult = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
     if (!available.available) {
       await BarcodeScanner.installGoogleBarcodeScannerModule();
