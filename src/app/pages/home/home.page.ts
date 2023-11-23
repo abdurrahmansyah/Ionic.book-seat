@@ -39,7 +39,7 @@ export class HomePage implements OnInit {
   }
 
   async InitializeApp() {
-    const requestPermissions = await BarcodeScanner.requestPermissions();
+    const requestPermissions = await BarcodeScanner.requestPermissions().catch((err) => { throw err.message });
     this.isIOS = this.platform.is('ios') ? true : false;
   }
 

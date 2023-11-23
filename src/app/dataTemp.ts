@@ -1,7 +1,8 @@
 import { environment } from "src/environments/environment";
 
 export var url = {
-    urlHit: environment.production ? 'https://absensi.hutamakarya.com/api/' : 'https://absensi.hutamakarya.com/api/',
+    url: environment.production ? 'https://absensi.hutamakarya.com/api/' : 'https://absensi.hutamakarya.com/api/',
+    urlHITS: environment.production ? 'https://api-core.hits.hutamakarya.com/api/' : 'https://api-core.hits.hutamakarya.com/api/',
 }
 
 export var dataTemp = {
@@ -15,18 +16,19 @@ export var dataTemp = {
         'profile': '/tabs/profile',
     },
     url: {
-        'getSeat': url.urlHit + 'getSeat',
-        'getSeatById': url.urlHit + 'getSeatById',
-        'getSeatByCode': url.urlHit + 'getSeatByCode',
-        'createSeat': url.urlHit + 'createSeat',
-        'updateSeat': url.urlHit + 'updateSeat',
-        'getBookSeat': url.urlHit + 'getBookSeat',
-        'getBookSeatById': url.urlHit + 'getBookSeatById',
-        'getBookSeatByDate': url.urlHit + 'getBookSeatByDate',
-        'createBookSeat': url.urlHit + 'createBookSeat',
-        'updateBookSeat': url.urlHit + 'updateBookSeat',
-        'authAD': url.urlHit + 'authAD',
-        'loginSSO': url.urlHit + 'loginSSO'
+        'getSeat': url.url + 'getSeat',
+        'getSeatById': url.url + 'getSeatById',
+        'getSeatByCode': url.url + 'getSeatByCode',
+        'createSeat': url.url + 'createSeat',
+        'updateSeat': url.url + 'updateSeat',
+        'getBookSeat': url.url + 'getBookSeat',
+        'getBookSeatById': url.url + 'getBookSeatById',
+        'getBookSeatByDate': url.url + 'getBookSeatByDate',
+        'createBookSeat': url.url + 'createBookSeat',
+        'updateBookSeat': url.url + 'updateBookSeat',
+        'authAD': url.url + 'authAD',
+        'loginSSO': url.url + 'loginSSO',
+        'login': url.urlHITS + 'login'
     },
     user: {
         "id": 9853,

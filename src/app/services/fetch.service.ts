@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from "src/environments/environment";
+import { HttpClient } from '@angular/common/http';
 import { dataTemp } from '../dataTemp';
 import { InjectorInstance } from '../app.module';
-import { take } from 'rxjs';
+import { catchError, take } from 'rxjs';
 
 export interface SeatData {
   id?: string,
@@ -53,7 +52,7 @@ export class FetchService {
 
     return this.httpClient.post(dataTemp.url.createSeat, postdata);
   }
-  
+
   UpdateSeat(seatData: SeatData) {
     let postdata = new FormData();
     postdata.append('id', seatData.id!);
@@ -88,7 +87,7 @@ export class FetchService {
 
     return this.httpClient.post(dataTemp.url.createBookSeat, postdata);
   }
-  
+
   UpdateBookSeat(bookSeatData: BookSeatData) {
     let postdata = new FormData();
     postdata.append('id', bookSeatData.id!);
@@ -103,20 +102,31 @@ export class FetchService {
   }
 
   async Login(username: string, password: string) {
-    let postdata = new FormData();
-    postdata.append('username', username);
-    postdata.append('password', password);
-
-    var data = this.httpClient.post(dataTemp.url.authAD, postdata);
-    var auth = await new Promise(resolve => {
-      data.pipe(take(1)).subscribe((data: any) => {
-        resolve(data.auth);
-      })
+    var data = this.httpClient.post(dataTemp.url.login, { email: username, password: password, device_name: 'Web Browser' });
+    var auth: any = await new Promise(resolve => {
+      data.pipe(take(1), catchError((error) => { throw error }))
+        .subscribe(
+          (data: any) => {
+            resolve({ status: 'success', data: data.token });
+          },
+          (error) => {
+            const msg = this.GetErrMsg(error.error.error);
+            resolve({ status: 'failed', data: msg });
+          })
     })
 
-    if (auth) {
+    if (auth.status == 'success') {
+      let postdata = new FormData();
+      postdata.append('username', username);
+      postdata.append('password', password);
       return this.httpClient.post(dataTemp.url.loginSSO, postdata);
     }
-    else throw ('Login Gagal! Username atau Password Salah.')
+    else throw (auth.data)
+  }
+
+  GetErrMsg(error: any) {
+    if (error == 'Email is not registered.') return 'Login Gagal! Email tidak terdaftar.';
+    else if (error == 'The provided credentials do not match our records.') return 'Login Gagal! Username atau Password Salah.';
+    else return 'Login Gagal!';
   }
 }
