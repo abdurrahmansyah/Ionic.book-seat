@@ -4,7 +4,18 @@
       <ion-text style="font-size: 30px; font-weight: 700;">Book Your Seat</ion-text>
     </div>
     <img class="ion-margin" style="border-radius: 10px;" src="../../../assets/images/img-3.jpeg">
-    <div class="scrollYnew ion-padding">
+    <div style="padding: 0px 10px 10px 10px;">
+      <ion-segment (ionChange)="SegmentChanged($event)" [(ngModel)]="segment" name="segment">
+        <ion-segment-button value="seats">
+          <ion-label>Seats</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="users">
+          <ion-label>Users</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div *ngIf="segment === 'seats'" class="scrollYnew ion-padding">
       <div *ngFor="let x of seatDataList">
         <ion-accordion-group mode="md" expand="inset">
           <ion-accordion value="asesmen">
@@ -19,6 +30,23 @@
           </ion-accordion>
         </ion-accordion-group>
       </div>
+    </div>
+
+    <div *ngIf="segment === 'users'" class="scrollYnew ion-padding">
+      <!-- <div *ngFor="let x of seatDataList">
+        <ion-accordion-group mode="md" expand="inset">
+          <ion-accordion value="asesmen">
+            <ion-item *ngIf="!x.bookedSeatData" slot="header" color="primary">{{x.name}}</ion-item>
+            <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
+            <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
+              <ion-label>
+                {{x.bookedSeatData.employee_id[1]}}
+                <p>{{x.bookedSeatData.book_datetime}}</p>
+              </ion-label>
+            </ion-item>
+          </ion-accordion>
+        </ion-accordion-group>
+      </div> -->
     </div>
   </div>
 

@@ -22,6 +22,8 @@ export class HomePage implements OnInit {
 
   isIOS: boolean = false;
 
+  segment: string = "seats";
+
   constructor(
     private fetchService: FetchService,
     private globalService: GlobalService,
@@ -31,7 +33,7 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     try {
-      await this.InitializeApp();
+      // await this.InitializeApp();
       await this.InitializeData();
     } catch (error: any) {
       this.globalService.LogAlert(error);
@@ -331,5 +333,9 @@ export class HomePage implements OnInit {
     }).then(alert => {
       return alert.present();
     });
+  }
+
+  public SegmentChanged(ev: any) {
+    // console.log(ev);
   }
 }
