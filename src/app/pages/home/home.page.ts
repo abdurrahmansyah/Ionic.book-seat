@@ -3,7 +3,7 @@ import { async } from '@angular/core/testing';
 import { AlertController, LoadingController, Platform } from '@ionic/angular';
 import { take } from 'rxjs';
 import { dataTemp } from 'src/app/dataTemp';
-import { BookSeatData, FetchService, SeatData } from 'src/app/services/fetch.service';
+import { BookSeatData, FetchService, SeatData, UserGroupData } from 'src/app/services/fetch.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { PhotoService } from 'src/app/services/photo.service';
 import { BarcodeScanner, BarcodeFormat, LensFacing, IsGoogleBarcodeScannerModuleAvailableResult } from '@capacitor-mlkit/barcode-scanning';
@@ -16,6 +16,7 @@ import { BarcodeScanner, BarcodeFormat, LensFacing, IsGoogleBarcodeScannerModule
 export class HomePage implements OnInit {
   bookSeatDataList: BookSeatData[] = [];
   seatDataList: SeatData[] = [];
+  userGroupDataList: UserGroupData[] = [];
 
   isAlreadyBook: boolean = false;
   bookedSeatData: BookSeatData | undefined;
@@ -48,11 +49,15 @@ export class HomePage implements OnInit {
   async InitializeData() {
     this.bookSeatDataList = await this.GetBookSeatByDate();
     this.seatDataList = await this.GetSeat();
+    this.userGroupDataList = await this.GetUsersByDivisiId(this.globalService.userData.divisi_id);
     console.log('bookSeatDataList', this.bookSeatDataList);
 
     if (this.bookSeatDataList.length > 0) {
       this.seatDataList.forEach(seat => {
         seat.bookedSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
+      });
+      this.userGroupDataList.forEach(user => {
+        user.bookedSeatData = this.bookSeatDataList.find(x => x.employee_id[0] == user.id);
       });
 
       this.bookedSeatData = this.bookSeatDataList.find(x => x.employee_id[0] == this.globalService.userData.id);
@@ -60,6 +65,7 @@ export class HomePage implements OnInit {
       console.log('this.bookedSeatData', this.bookedSeatData);
     }
     console.log('seatDataList', this.seatDataList);
+    console.log('userGroupData', this.userGroupDataList);
   }
 
   private async GetBookSeatByDate(): Promise<BookSeatData[]> {
@@ -93,6 +99,17 @@ export class HomePage implements OnInit {
 
     // if (resSeat.response == 'failed') throw (resSeat.data);
     return resSeat.data.find((x: any) => x);
+  }
+
+  private async GetUsersByDivisiId(divisi_id: string): Promise<UserGroupData[]> {
+    const resSeat: any = await new Promise(resolve => {
+      this.fetchService.GetUsersByDivisiId(divisi_id).subscribe(data => {
+        resolve(data);
+      });
+    });
+
+    // if (resSeat.response == 'failed') throw (resSeat.data);
+    return resSeat.data;
   }
 
   async ScanSementara() {

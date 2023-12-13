@@ -23,6 +23,17 @@ export interface BookSeatData {
   status: string
 }
 
+export interface UserGroupData {
+  id: string,
+  nik: string,
+  name: string,
+  image: string,
+  work_email: string,
+  token: string,
+  attendance_state: string,
+  bookedSeatData?: BookSeatData
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -101,8 +112,12 @@ export class FetchService {
     return this.httpClient.post(dataTemp.url.updateBookSeat, postdata);
   }
 
+  GetUsersByDivisiId(divisi_id: string) {
+    return this.httpClient.get(dataTemp.url.getUsersByDivisiId, { params: { 'divisi_id': divisi_id } });
+  }
+
   async Login(username: string, password: string) {
-    var data = this.httpClient.post(dataTemp.url.login, { email: username, password: password, device_name: 'Web Browser' });
+    var data = this.httpClient.post(dataTemp.url.loginHITS, { email: username, password: password, device_name: 'Web Browser' });
     var auth: any = await new Promise(resolve => {
       data.pipe(take(1), catchError((error) => { throw error }))
         .subscribe(
@@ -121,7 +136,13 @@ export class FetchService {
       postdata.append('password', password);
       return this.httpClient.post(dataTemp.url.loginSSO, postdata);
     }
-    else throw (auth.data)
+    else {
+      let postdata = new FormData();
+      postdata.append('username', username);
+      postdata.append('password', password);
+      return this.httpClient.post(dataTemp.url.login, postdata);
+      // throw (auth.data);
+    }
   }
 
   GetErrMsg(error: any) {

@@ -26,9 +26,14 @@ export var dataTemp = {
         'getBookSeatByDate': url.url + 'getBookSeatByDate',
         'createBookSeat': url.url + 'createBookSeat',
         'updateBookSeat': url.url + 'updateBookSeat',
+        'getUsersByDivisiId': url.url + 'getUsersByDivisiId',
         'authAD': url.url + 'authAD',
         'loginSSO': url.url + 'loginSSO',
-        'login': url.urlHITS + 'login'
+        'loginHITS': url.urlHITS + 'login',
+        'login': url.url + 'login'
+    },
+    userGroup: {
+        'divisiSIT': '1489',
     },
     user: {
         "id": 9853,

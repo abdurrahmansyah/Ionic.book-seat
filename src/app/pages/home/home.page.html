@@ -33,20 +33,20 @@
     </div>
 
     <div *ngIf="segment === 'users'" class="scrollYnew ion-padding">
-      <!-- <div *ngFor="let x of seatDataList">
+      <div *ngFor="let x of userGroupDataList">
         <ion-accordion-group mode="md" expand="inset">
           <ion-accordion value="asesmen">
             <ion-item *ngIf="!x.bookedSeatData" slot="header" color="primary">{{x.name}}</ion-item>
             <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
             <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
               <ion-label>
-                {{x.bookedSeatData.employee_id[1]}}
+                {{x.bookedSeatData.code_id[1]}}
                 <p>{{x.bookedSeatData.book_datetime}}</p>
               </ion-label>
             </ion-item>
           </ion-accordion>
         </ion-accordion-group>
-      </div> -->
+      </div>
     </div>
   </div>
 
