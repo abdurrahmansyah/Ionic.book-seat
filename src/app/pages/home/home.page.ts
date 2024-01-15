@@ -3,7 +3,7 @@ import { async } from '@angular/core/testing';
 import { AlertController, LoadingController, Platform } from '@ionic/angular';
 import { take } from 'rxjs';
 import { dataTemp } from 'src/app/dataTemp';
-import { BookSeatData, FetchService, SeatData, UserGroupData } from 'src/app/services/fetch.service';
+import { BookSeatData, FetchService, SeatData, UserGroupData, VIPSeatData } from 'src/app/services/fetch.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { PhotoService } from 'src/app/services/photo.service';
 import { BarcodeScanner, BarcodeFormat, LensFacing, IsGoogleBarcodeScannerModuleAvailableResult } from '@capacitor-mlkit/barcode-scanning';
@@ -16,6 +16,7 @@ import { BarcodeScanner, BarcodeFormat, LensFacing, IsGoogleBarcodeScannerModule
 export class HomePage implements OnInit {
   bookSeatDataList: BookSeatData[] = [];
   seatDataList: SeatData[] = [];
+  vipSeatDataList: VIPSeatData[] = [];
   userGroupDataList: UserGroupData[] = [];
 
   isAlreadyBook: boolean = false;
@@ -49,6 +50,8 @@ export class HomePage implements OnInit {
   async InitializeData() {
     this.bookSeatDataList = await this.GetBookSeatByDate();
     this.seatDataList = await this.GetSeat();
+    this.vipSeatDataList = await this.GetVIPSeat();
+    await this.FixBookSeatDataList(this.bookSeatDataList, this.vipSeatDataList);
     this.userGroupDataList = await this.GetUsersByDivisiId(this.globalService.userData.divisi_id);
     console.log('bookSeatDataList', this.bookSeatDataList);
 
@@ -64,6 +67,7 @@ export class HomePage implements OnInit {
       if (this.bookedSeatData) this.isAlreadyBook = true;
       console.log('this.bookedSeatData', this.bookedSeatData);
     }
+    console.log('vipSeatDataList', this.vipSeatDataList);
     console.log('seatDataList', this.seatDataList);
     console.log('userGroupData', this.userGroupDataList);
   }
@@ -99,6 +103,29 @@ export class HomePage implements OnInit {
 
     // if (resSeat.response == 'failed') throw (resSeat.data);
     return resSeat.data.find((x: any) => x);
+  }
+
+  private async GetVIPSeat() {
+    const resSeat: any = await new Promise(resolve => {
+      this.fetchService.GetVIPSeat().subscribe(data => {
+        resolve(data);
+      });
+    });
+
+    return resSeat.data;
+  }
+
+  async FixBookSeatDataList(bookSeatDataList: BookSeatData[], vipSeatDataList: VIPSeatData[]) {
+    vipSeatDataList.forEach(async vipSeatData => {
+      if (bookSeatDataList.filter(x => x.employee_id[0] == vipSeatData.employee_id[0]).length == 0) {
+        var result = await this.CreateBookSeat(vipSeatData.employee_id[0], vipSeatData.seat_id[0], true);
+        console.log('result vip', result);
+
+        if (!result) throw ('Gagal book');
+      }
+    })
+    if (!bookSeatDataList.find(x => x.employee_id[0] == vipSeatDataList[0].employee_id[0]))
+      this.bookSeatDataList = await this.GetBookSeatByDate();
   }
 
   private async GetUsersByDivisiId(divisi_id: string): Promise<UserGroupData[]> {
@@ -142,22 +169,7 @@ export class HomePage implements OnInit {
               this.ValidateSeat(seat);
               console.log('seat', seat);
 
-              const bookSeatData: BookSeatData = {
-                employee_id: this.globalService.userData.id,
-                date: this.globalService.GetDate().todayFormatted,
-                code_id: seat.id!,
-                book_datetime: this.globalService.GetDate().todayDateTimeFormattedWithoutSecond,
-                description: 'TES APP',
-                status: dataTemp.status.active,
-              }
-              console.log('bookSeatData', bookSeatData);
-              const id = this.fetchService.CreateBookSeat(bookSeatData);
-              var result: any = await new Promise(resolve => {
-                id.pipe(take(1)).subscribe((data: any) => {
-                  resolve(data);
-                })
-              })
-
+              var result = await this.CreateBookSeat(this.globalService.userData.id, seat.id!, false);
               console.log('result', result);
 
               if (!result) throw ('Gagal book');
@@ -206,6 +218,7 @@ export class HomePage implements OnInit {
 
     try {
       // const code = 'SIT005';
+      await this.CheckAndInstallGoogleBarcodeScanner();
       const code = await this.ScanBarcode();
       const seat = await this.GetSeatByCode(code);
       var bookSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
@@ -273,22 +286,7 @@ export class HomePage implements OnInit {
             // const seat = await this.GetSeatByCode(code);
             console.log('seat', seat);
 
-            const bookSeatData: BookSeatData = {
-              employee_id: this.globalService.userData.id,
-              date: this.globalService.GetDate().todayFormatted,
-              code_id: seat.id!,
-              book_datetime: this.globalService.GetDate().todayDateTimeFormattedWithoutSecond,
-              description: 'Booked',
-              status: dataTemp.status.active,
-            }
-            console.log('bookSeatData', bookSeatData);
-            const id = this.fetchService.CreateBookSeat(bookSeatData);
-            var result: any = await new Promise(resolve => {
-              id.pipe(take(1)).subscribe((data: any) => {
-                resolve(data);
-              })
-            })
-
+            var result = await this.CreateBookSeat(this.globalService.userData.id, seat.id!, false);
             console.log('result', result);
 
             if (!result) throw new Error('Gagal book');
@@ -305,6 +303,26 @@ export class HomePage implements OnInit {
     }).then(alert => {
       return alert.present();
     });
+  }
+
+  private async CreateBookSeat(employee_id: string, seat_id: string, isVIP: boolean) {
+    const bookSeatData: BookSeatData = {
+      employee_id: employee_id,
+      date: this.globalService.GetDate().todayFormatted,
+      code_id: seat_id,
+      book_datetime: isVIP ? this.globalService.GetDate().todayFormatted + " 07:00" : this.globalService.GetDate().todayDateTimeFormattedWithoutSecond,
+      description: 'Booked',
+      status: dataTemp.status.active,
+    };
+    console.log('bookSeatData', bookSeatData);
+    const id = this.fetchService.CreateBookSeat(bookSeatData);
+    var result: any = await new Promise(resolve => {
+      id.pipe(take(1)).subscribe((data: any) => {
+        resolve(data);
+      });
+    });
+
+    return result;
   }
 
   async WithdrawBookSeat(bookSeatData: BookSeatData) {

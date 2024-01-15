@@ -3,7 +3,7 @@
     <div style="padding: 50px 30px 0px 30px;">
       <ion-text style="font-size: 30px; font-weight: 700;">Book Your Seat</ion-text>
     </div>
-    <img class="ion-margin" style="border-radius: 10px;" src="../../../assets/images/img-3.jpeg">
+    <img class="ion-margin" style="border-radius: 10px;" src="../../../assets/images/img-denah-sit.jpeg">
     <div style="padding: 0px 10px 10px 10px;">
       <ion-segment (ionChange)="SegmentChanged($event)" [(ngModel)]="segment" name="segment">
         <ion-segment-button value="seats">
@@ -19,7 +19,7 @@
       <div *ngFor="let x of seatDataList">
         <ion-accordion-group mode="md" expand="inset">
           <ion-accordion value="asesmen">
-            <ion-item *ngIf="!x.bookedSeatData" slot="header" color="primary">{{x.name}}</ion-item>
+            <ion-item *ngIf="!x.bookedSeatData" slot="header" color="success">{{x.name}}</ion-item>
             <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
             <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
               <ion-label>
@@ -36,7 +36,7 @@
       <div *ngFor="let x of userGroupDataList">
         <ion-accordion-group mode="md" expand="inset">
           <ion-accordion value="asesmen">
-            <ion-item *ngIf="!x.bookedSeatData" slot="header" color="primary">{{x.name}}</ion-item>
+            <ion-item *ngIf="!x.bookedSeatData" slot="header" color="success">{{x.name}}</ion-item>
             <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
             <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
               <ion-label>

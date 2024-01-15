@@ -10,7 +10,16 @@ export interface SeatData {
   name: string,
   description: string,
   status: string,
-  bookedSeatData?: BookSeatData
+  // bookedSeatData?: BookSeatData
+  bookedSeatData?: any
+}
+
+export interface VIPSeatData {
+  id?: string,
+  seat_id: string,
+  employee_id: string,
+  description: string,
+  status: string,
 }
 
 export interface BookSeatData {
@@ -73,6 +82,36 @@ export class FetchService {
     postdata.append('status', seatData.status);
 
     return this.httpClient.post(dataTemp.url.updateSeat, postdata);
+  }
+
+  /////////////////////////////
+  GetVIPSeat() {
+    return this.httpClient.get(dataTemp.url.getVIPSeat);
+  }
+
+  GetVIPSeatById(id: string) {
+    return this.httpClient.get(dataTemp.url.getVIPSeatById, { params: { 'id': id } });
+  }
+
+  createVIPSeat(vipSeatData: VIPSeatData) {
+    let postdata = new FormData();
+    postdata.append('seat_id', vipSeatData.seat_id);
+    postdata.append('employee_id', vipSeatData.employee_id);
+    postdata.append('description', vipSeatData.description);
+    postdata.append('status', vipSeatData.status);
+
+    return this.httpClient.post(dataTemp.url.createVIPSeat, postdata);
+  }
+
+  UpdateVIPSeat(vipSeatData: VIPSeatData) {
+    let postdata = new FormData();
+    postdata.append('id', vipSeatData.id!);
+    postdata.append('seat_id', vipSeatData.seat_id);
+    postdata.append('employee_id', vipSeatData.employee_id);
+    postdata.append('description', vipSeatData.description);
+    postdata.append('status', vipSeatData.status);
+
+    return this.httpClient.post(dataTemp.url.updateVIPSeat, postdata);
   }
 
   GetBookSeat() {
