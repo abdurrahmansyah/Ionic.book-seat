@@ -63,6 +63,10 @@ export class FetchService {
     return this.httpClient.get(dataTemp.url.getSeatByCode, { params: { 'code': code } });
   }
 
+  GetSeatByDivisiId(divisi_id: string) {
+    return this.httpClient.get(dataTemp.url.getSeatByDivisiId, { params: { 'divisi_id': divisi_id } });
+  }
+
   CreateSeat(seatData: SeatData) {
     let postdata = new FormData();
     postdata.append('code', seatData.code);
@@ -91,6 +95,10 @@ export class FetchService {
 
   GetVIPSeatById(id: string) {
     return this.httpClient.get(dataTemp.url.getVIPSeatById, { params: { 'id': id } });
+  }
+
+  GetVIPSeatByDivisiId(divisi_id: string) {
+    return this.httpClient.get(dataTemp.url.getVIPSeatByDivisiId, { params: { 'divisi_id': divisi_id } });
   }
 
   createVIPSeat(vipSeatData: VIPSeatData) {
@@ -124,6 +132,10 @@ export class FetchService {
 
   GetBookSeatByDate(date: string) {
     return this.httpClient.get(dataTemp.url.getBookSeatByDate, { params: { 'date': date } });
+  }
+
+  GetBookSeatByDateAndDivisiId(date: string, divisi_id: string) {
+    return this.httpClient.get(dataTemp.url.getBookSeatByDateAndDivisiId, { params: { 'date': date, 'divisi_id': divisi_id } });
   }
 
   CreateBookSeat(bookSeatData: BookSeatData) {

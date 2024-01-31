@@ -3,7 +3,11 @@
     <div style="padding: 50px 30px 0px 30px;">
       <ion-text style="font-size: 30px; font-weight: 700;">Book Your Seat</ion-text>
     </div>
-    <img class="ion-margin" style="border-radius: 10px;" src="../../../assets/images/img-denah-sit.jpeg">
+    <div style="position: relative;">
+      <img class="ion-margin" style="border-radius: 10px;" src="../../../assets/images/img-denah-sit.jpeg">
+      <img class="ion-margin" style="position: absolute; top: 0px; border-radius: 10px;" src="../../../assets/images/img-denah-sit-1.png">
+    </div>
+
     <div style="padding: 0px 10px 10px 10px;">
       <ion-segment (ionChange)="SegmentChanged($event)" [(ngModel)]="segment" name="segment">
         <ion-segment-button value="seats">
@@ -33,19 +37,43 @@
     </div>
 
     <div *ngIf="segment === 'users'" class="scrollYnew ion-padding">
-      <div *ngFor="let x of userGroupDataList">
-        <ion-accordion-group mode="md" expand="inset">
-          <ion-accordion value="asesmen">
-            <ion-item *ngIf="!x.bookedSeatData" slot="header" color="success">{{x.name}}</ion-item>
-            <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
-            <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
-              <ion-label>
-                {{x.bookedSeatData.code_id[1]}}
-                <p>{{x.bookedSeatData.book_datetime}}</p>
-              </ion-label>
-            </ion-item>
-          </ion-accordion>
-        </ion-accordion-group>
+      <ion-searchbar mode="ios" show-cancel-button="focus" placeholder="Search" style="padding: 0px 5%;"
+        (ionInput)="searchInput($event)" (ionFocus)="searchFocus($event)" (ionCancel)="searchCancel($event)"
+        (ionChange)="searchChange($event)" cancel-button-text="Batal" cancel-button-icon="trash"
+        placeholder="Cari"></ion-searchbar>
+
+      <div *ngIf="isSearch">
+        <div *ngFor="let x of search">
+          <ion-accordion-group mode="md" expand="inset">
+            <ion-accordion value="asesmen">
+              <ion-item *ngIf="!x.bookedSeatData" slot="header" color="success">{{x.name}}</ion-item>
+              <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
+              <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
+                <ion-label>
+                  {{x.bookedSeatData.code_id[1]}}
+                  <p>{{x.bookedSeatData.book_datetime}}</p>
+                </ion-label>
+              </ion-item>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
+      </div>
+
+      <div *ngIf="!isSearch">
+        <div *ngFor="let x of userGroupDataList">
+          <ion-accordion-group mode="md" expand="inset">
+            <ion-accordion value="asesmen">
+              <ion-item *ngIf="!x.bookedSeatData" slot="header" color="success">{{x.name}}</ion-item>
+              <ion-item *ngIf="x.bookedSeatData" slot="header" color="danger">{{x.name}}</ion-item>
+              <ion-item *ngIf="x.bookedSeatData" slot="content" class="item">
+                <ion-label>
+                  {{x.bookedSeatData.code_id[1]}}
+                  <p>{{x.bookedSeatData.book_datetime}}</p>
+                </ion-label>
+              </ion-item>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
       </div>
     </div>
   </div>

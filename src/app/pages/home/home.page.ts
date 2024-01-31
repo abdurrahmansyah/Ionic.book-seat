@@ -23,6 +23,9 @@ export class HomePage implements OnInit {
   bookedSeatData: BookSeatData | undefined;
 
   isIOS: boolean = false;
+  isSearch: boolean = false;
+  inputs: string = '';
+  search: UserGroupData[] = [];
 
   segment: string = "seats";
 
@@ -48,9 +51,12 @@ export class HomePage implements OnInit {
   }
 
   async InitializeData() {
-    this.bookSeatDataList = await this.GetBookSeatByDate();
-    this.seatDataList = await this.GetSeat();
-    this.vipSeatDataList = await this.GetVIPSeat();
+    // this.bookSeatDataList = await this.GetBookSeatByDate();
+    // this.seatDataList = await this.GetSeat();
+    // this.vipSeatDataList = await this.GetVIPSeat();
+    this.bookSeatDataList = await this.GetBookSeatByDateAndDivisiId(this.globalService.userData.divisi_id);
+    this.seatDataList = await this.GetSeatByDivisiId(this.globalService.userData.divisi_id);
+    this.vipSeatDataList = await this.GetVIPSeatByDivisiId(this.globalService.userData.divisi_id);
     await this.FixBookSeatDataList(this.bookSeatDataList, this.vipSeatDataList);
     this.userGroupDataList = await this.GetUsersByDivisiId(this.globalService.userData.divisi_id);
     console.log('bookSeatDataList', this.bookSeatDataList);
@@ -83,6 +89,17 @@ export class HomePage implements OnInit {
     return resBookSeatByDate.data;
   }
 
+  private async GetBookSeatByDateAndDivisiId(divisi_id: string): Promise<BookSeatData[]> {
+    const resBookSeatByDate: any = await new Promise(resolve => {
+      this.fetchService.GetBookSeatByDateAndDivisiId(this.globalService.GetDate().todayFormatted, divisi_id).subscribe(data => {
+        resolve(data);
+      });
+    });
+
+    // if (resBookSeatByDate.response == 'failed') throw (resBookSeatByDate.data);
+    return resBookSeatByDate.data;
+  }
+
   private async GetSeat() {
     const resSeat: any = await new Promise(resolve => {
       this.fetchService.GetSeat().subscribe(data => {
@@ -105,9 +122,29 @@ export class HomePage implements OnInit {
     return resSeat.data.find((x: any) => x);
   }
 
+  private async GetSeatByDivisiId(divisi_id: string): Promise<SeatData[]> {
+    const resSeat: any = await new Promise(resolve => {
+      this.fetchService.GetSeatByDivisiId(divisi_id).subscribe(data => {
+        resolve(data);
+      });
+    });
+
+    return resSeat.data;
+  }
+
   private async GetVIPSeat() {
     const resSeat: any = await new Promise(resolve => {
       this.fetchService.GetVIPSeat().subscribe(data => {
+        resolve(data);
+      });
+    });
+
+    return resSeat.data;
+  }
+
+  private async GetVIPSeatByDivisiId(divisi_id: string) {
+    const resSeat: any = await new Promise(resolve => {
+      this.fetchService.GetVIPSeatByDivisiId(divisi_id).subscribe(data => {
         resolve(data);
       });
     });
@@ -371,6 +408,42 @@ export class HomePage implements OnInit {
   }
 
   public SegmentChanged(ev: any) {
-    // console.log(ev);
+    console.log(ev);
+    this.isSearch = false;
   }
+
+  searchInput(event: any) {
+    const query = event.target.value.toLowerCase();
+    // console.log('Input', query);
+  }
+
+  async searchChange(event: any) {
+    const query = event.target.value.toLowerCase();
+    console.log('Search', query);
+    this.inputs = query;
+    if (this.inputs.length > 0) {
+      this.search = this.userGroupDataList.filter(x =>
+        Object.keys(x).some(k => x.name != null &&
+          x.name.toString().toLowerCase()
+            .includes(query.toLowerCase()))
+      );
+      this.isSearch = true;
+    }
+    else {
+      this.search = [];
+      this.isSearch = false;
+    }
+  }
+
+  searchFocus(event: any) {
+    const query = event.target.value.toLowerCase();
+    console.log('Focus', query);
+  }
+
+  searchCancel(event: any) {
+    const query = event.target.value.toLowerCase();
+    console.log('Cancel', query);
+    this.search = [];
+    this.isSearch = false;
+}
 }
