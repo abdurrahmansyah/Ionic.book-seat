@@ -26,8 +26,13 @@ export class HomePage implements OnInit {
   isSearch: boolean = false;
   inputs: string = '';
   search: UserGroupData[] = [];
+  isLoaded: boolean = false;
 
   segment: string = "seats";
+
+  // denah
+  imageDenah: string | null = null;
+  denahBookedSeat: any[]= [];
 
   constructor(
     private fetchService: FetchService,
@@ -51,6 +56,10 @@ export class HomePage implements OnInit {
   }
 
   async InitializeData() {
+    if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SIT)
+      this.imageDenah = '../../../assets/images/denah/SIT.png';
+    else this.imageDenah = '../../../assets/images/denah/SIT.png';
+
     // this.bookSeatDataList = await this.GetBookSeatByDate();
     // this.seatDataList = await this.GetSeat();
     // this.vipSeatDataList = await this.GetVIPSeat();
@@ -64,6 +73,9 @@ export class HomePage implements OnInit {
     if (this.bookSeatDataList.length > 0) {
       this.seatDataList.forEach(seat => {
         seat.bookedSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
+        if (this.bookSeatDataList.filter(x => x.code_id[0] == seat.id).length > 0) {
+          this.denahBookedSeat.push('../../../assets/images/denah/' + seat.code + '.png');
+        }
       });
       this.userGroupDataList.forEach(user => {
         user.bookedSeatData = this.bookSeatDataList.find(x => x.employee_id[0] == user.id);
@@ -73,6 +85,8 @@ export class HomePage implements OnInit {
       if (this.bookedSeatData) this.isAlreadyBook = true;
       console.log('this.bookedSeatData', this.bookedSeatData);
     }
+    this.isLoaded = true;
+    console.log('denahBookedSeat', this.denahBookedSeat);
     console.log('vipSeatDataList', this.vipSeatDataList);
     console.log('seatDataList', this.seatDataList);
     console.log('userGroupData', this.userGroupDataList);
@@ -445,5 +459,5 @@ export class HomePage implements OnInit {
     console.log('Cancel', query);
     this.search = [];
     this.isSearch = false;
-}
+  }
 }

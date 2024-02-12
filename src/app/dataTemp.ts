@@ -155,5 +155,8 @@ export var dataTemp = {
     desc_seat: {
         "vip": "vip",
         "public": "public"
+    },
+    divisi_name: {
+        SIT: "Divisi Sistem, TI & Riset Teknologi"
     }
 }

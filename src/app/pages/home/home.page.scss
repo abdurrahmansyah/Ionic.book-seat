@@ -14,7 +14,35 @@
     }
 }
 
-.item{
+.item {
     --background: rgba(var(--ion-color-danger-rgb), 0.25);
     color: var(--ion-color-meds-red);
+}
+
+.denah-utama {
+    border-radius: 10px;
+}
+
+.denah-addon {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+}
+
+.skeleton-denah {
+    height: 51vw;
+    border-radius: 10px;
+}
+
+.skeleton-search {
+    height: 32px;
+    border-radius: 5px;
+    margin-bottom: 16px;
+}
+
+.skeleton-item {
+    height: 48px;
+    border-radius: 5px;
+    margin-bottom: 16px;
 }
