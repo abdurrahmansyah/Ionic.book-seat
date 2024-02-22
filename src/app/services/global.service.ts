@@ -9,6 +9,7 @@ import { dataTemp } from '../dataTemp';
 })
 export class GlobalService {
   userData: any;
+  isUserDataLoad: boolean = false;
 
   constructor(
     private toastController: ToastController,

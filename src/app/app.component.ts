@@ -12,5 +12,6 @@ export class AppComponent {
 
   async ngOnInit() {
     await this.globalService.GetUserFromPreference();
+    this.globalService.isUserDataLoad = true;
   }
 }

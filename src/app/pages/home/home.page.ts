@@ -35,6 +35,7 @@ export class HomePage implements OnInit {
   imageDenahMap: string | null = null;
   denahBookedSeat: any[] = [];
 
+  i: number = 0;
   constructor(
     private fetchService: FetchService,
     private globalService: GlobalService,
@@ -44,8 +45,15 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     try {
-      await this.InitializeApp();
-      await this.InitializeAllData();
+      setTimeout(async () => {
+        if (!this.globalService.isUserDataLoad) {
+          console.log('load data... ', this.i++);
+          await this.ngOnInit();
+        } else {
+          await this.InitializeApp();
+          await this.InitializeAllData();
+        }
+      }, 200);
     } catch (error: any) {
       this.globalService.LogAlert(error);
     }
