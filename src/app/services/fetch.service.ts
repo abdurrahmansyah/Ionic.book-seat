@@ -12,6 +12,7 @@ export interface SeatData {
   status: string,
   // bookedSeatData?: BookSeatData
   bookedSeatData?: any
+  divisi_id?: any
 }
 
 export interface VIPSeatData {

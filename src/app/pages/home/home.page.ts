@@ -32,7 +32,8 @@ export class HomePage implements OnInit {
 
   // denah
   imageDenah: string | null = null;
-  denahBookedSeat: any[]= [];
+  imageDenahMap: string | null = null;
+  denahBookedSeat: any[] = [];
 
   constructor(
     private fetchService: FetchService,
@@ -43,8 +44,8 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     try {
-      // await this.InitializeApp();
-      await this.InitializeData();
+      await this.InitializeApp();
+      await this.InitializeAllData();
     } catch (error: any) {
       this.globalService.LogAlert(error);
     }
@@ -55,23 +56,46 @@ export class HomePage implements OnInit {
     this.isIOS = this.platform.is('ios') ? true : false;
   }
 
-  async InitializeData() {
-    if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SIT)
+  async InitializeAllData() {
+    if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SIT) {
       this.imageDenah = '../../../assets/images/denah/SIT.png';
-    else this.imageDenah = '../../../assets/images/denah/SIT.png';
+      this.imageDenahMap = '../../../assets/images/denah/SIT000.png';
+    }
+    else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SEKPER) {
+      this.imageDenah = '../../../assets/images/denah/SEKPER.jpeg';
+      this.imageDenahMap = null;
+    }
+    else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.QHSSE) {
+      this.imageDenah = '../../../assets/images/denah/QHSSE.jpeg';
+      this.imageDenahMap = null;
+    }
+    else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SPI) {
+      this.imageDenah = '../../../assets/images/denah/SPI.jpeg';
+      this.imageDenahMap = null;
+    }
+    else {
+      this.imageDenah = '../../../assets/images/denah/SIT.png';
+      this.imageDenahMap = null;
+    }
 
-    // this.bookSeatDataList = await this.GetBookSeatByDate();
-    // this.seatDataList = await this.GetSeat();
-    // this.vipSeatDataList = await this.GetVIPSeat();
-    this.bookSeatDataList = await this.GetBookSeatByDateAndDivisiId(this.globalService.userData.divisi_id);
-    this.seatDataList = await this.GetSeatByDivisiId(this.globalService.userData.divisi_id);
+    await this.InitializeData();
+
     this.vipSeatDataList = await this.GetVIPSeatByDivisiId(this.globalService.userData.divisi_id);
+    console.log('vipSeatDataList', this.vipSeatDataList);
     await this.FixBookSeatDataList(this.bookSeatDataList, this.vipSeatDataList);
-    this.userGroupDataList = await this.GetUsersByDivisiId(this.globalService.userData.divisi_id);
+
+    this.isLoaded = true;
+  }
+
+  async InitializeData() {
+    this.bookSeatDataList = await this.GetBookSeatByDateAndDivisiId(this.globalService.userData.divisi_id);
+    const seatDataList = await this.GetSeatByDivisiId(this.globalService.userData.divisi_id);
     console.log('bookSeatDataList', this.bookSeatDataList);
+    console.log('seatDataList', seatDataList);
+    this.userGroupDataList = await this.GetUsersByDivisiId(this.globalService.userData.divisi_id);
 
     if (this.bookSeatDataList.length > 0) {
-      this.seatDataList.forEach(seat => {
+      seatDataList.forEach(seat => {
         seat.bookedSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
         if (this.bookSeatDataList.filter(x => x.code_id[0] == seat.id).length > 0) {
           this.denahBookedSeat.push('../../../assets/images/denah/' + seat.code + '.png');
@@ -83,13 +107,14 @@ export class HomePage implements OnInit {
 
       this.bookedSeatData = this.bookSeatDataList.find(x => x.employee_id[0] == this.globalService.userData.id);
       if (this.bookedSeatData) this.isAlreadyBook = true;
-      console.log('this.bookedSeatData', this.bookedSeatData);
+    } else {
+      this.bookedSeatData = undefined;
+      this.isAlreadyBook = false;
     }
-    this.isLoaded = true;
+    this.seatDataList = seatDataList;
+    console.log('this.bookedSeatData', this.bookedSeatData);
     console.log('denahBookedSeat', this.denahBookedSeat);
-    console.log('vipSeatDataList', this.vipSeatDataList);
-    console.log('seatDataList', this.seatDataList);
-    console.log('userGroupData', this.userGroupDataList);
+    console.log('userGroupDataList', this.userGroupDataList);
   }
 
   private async GetBookSeatByDate(): Promise<BookSeatData[]> {
@@ -167,16 +192,18 @@ export class HomePage implements OnInit {
   }
 
   async FixBookSeatDataList(bookSeatDataList: BookSeatData[], vipSeatDataList: VIPSeatData[]) {
-    vipSeatDataList.forEach(async vipSeatData => {
-      if (bookSeatDataList.filter(x => x.employee_id[0] == vipSeatData.employee_id[0]).length == 0) {
-        var result = await this.CreateBookSeat(vipSeatData.employee_id[0], vipSeatData.seat_id[0], true);
-        console.log('result vip', result);
+    if (vipSeatDataList.length > 0) {
+      vipSeatDataList.forEach(async vipSeatData => {
+        if (bookSeatDataList.filter(x => x.employee_id[0] == vipSeatData.employee_id[0]).length == 0) {
+          var result = await this.CreateBookSeat(vipSeatData.employee_id[0], vipSeatData.seat_id[0], true);
+          console.log('result vip', result);
 
-        if (!result) throw ('Gagal book');
-      }
-    })
-    if (!bookSeatDataList.find(x => x.employee_id[0] == vipSeatDataList[0].employee_id[0]))
-      this.bookSeatDataList = await this.GetBookSeatByDate();
+          if (!result) throw ('Gagal book');
+        }
+      })
+      if (!bookSeatDataList.find(x => x.employee_id[0] == vipSeatDataList[0].employee_id[0]))
+        this.bookSeatDataList = await this.GetBookSeatByDate();
+    }
   }
 
   private async GetUsersByDivisiId(divisi_id: string): Promise<UserGroupData[]> {
@@ -190,70 +217,21 @@ export class HomePage implements OnInit {
     return resSeat.data;
   }
 
-  async ScanSementara() {
-    const loading = await this.loadingController.create();
-    await loading.present();
-
-    try {
-      await this.InitializeData();
-      this.ValidateUser();
-      await loading.dismiss();
-      this.alertController.create({
-        mode: 'ios',
-        message: 'Kode Meja',
-        inputs: [{
-          placeholder: 'Masukkan Kode Meja',
-          type: 'textarea',
-          cssClass: 'kode-meja'
-        }],
-        buttons: [{
-          text: 'CANCEL',
-          role: 'Cancel'
-        }, {
-          text: 'YES',
-          handler: async (code) => {
-            const loading = await this.loadingController.create();
-            await loading.present();
-
-            try {
-              const seat: SeatData = await this.GetSeatByCode(code[0]);
-              this.ValidateSeat(seat);
-              console.log('seat', seat);
-
-              var result = await this.CreateBookSeat(this.globalService.userData.id, seat.id!, false);
-              console.log('result', result);
-
-              if (!result) throw ('Gagal book');
-
-              this.InitializeData();
-              this.globalService.LogToast('Berhasil book');
-              await loading.dismiss();
-            } catch (error: any) {
-              await loading.dismiss();
-              throw (error);
-            }
-          }
-        }]
-      }).then(alert => {
-        return alert.present();
-      });
-    } catch (e: any) {
-      await loading.dismiss();
-      this.globalService.LogAlert(e.message);
-    }
-  }
-
   async ScanAndBook() {
     const loading = await this.loadingController.create();
     await loading.present();
 
     try {
-      await this.InitializeData();
-      this.ValidateUser();
       await this.CheckAndInstallGoogleBarcodeScanner();
+      // const code = 'SIT037';
+      // const code = 'SEKPER011';
       const code = await this.ScanBarcode();
       const seat = await this.GetSeatByCode(code);
-      this.ValidateSeat(seat);
+      await this.ValidateIsUserAlreadyBook();
+      this.ValidateIsSeatAvailabelForUserDivision(seat);
+
+      await this.InitializeData();
+      this.ValidateIsSeatAlreadyUsed(seat);
       await loading.dismiss();
       await this.BookSeat(code, seat);
     } catch (e: any) {
@@ -268,10 +246,12 @@ export class HomePage implements OnInit {
     await loading.present();
 
     try {
-      // const code = 'SIT005';
       await this.CheckAndInstallGoogleBarcodeScanner();
+      // const code = 'SIT037';
+      // const code = 'SEKPER011';
       const code = await this.ScanBarcode();
       const seat = await this.GetSeatByCode(code);
+      this.ValidateIsSeatAvailabelForUserDivision(seat);
       var bookSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
 
       await loading.dismiss();
@@ -288,7 +268,7 @@ export class HomePage implements OnInit {
     }
   }
 
-  ValidateUser() {
+  async ValidateIsUserAlreadyBook() {
     var x = this.bookSeatDataList.filter(x => x.employee_id['0'] == this.globalService.userData.id);
     if (x.length > 0) throw new Error('Book Gagal! Anda sudah melakukan book pada: ' + x[0].code_id[1]);
   }
@@ -312,10 +292,15 @@ export class HomePage implements OnInit {
     return barcodes.barcodes[0].rawValue;
   }
 
-  ValidateSeat(seat: SeatData) {
+  ValidateIsSeatAlreadyUsed(seat: SeatData) {
     var bookSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
 
     if (bookSeatData) throw new Error('Booking Gagal! Meja sedang digunakan oleh ' + bookSeatData.employee_id[1]);
+  }
+
+  ValidateIsSeatAvailabelForUserDivision(seat: SeatData) {
+    if (seat.divisi_id[1] != this.globalService.userData.divisi_name)
+      throw new Error('Gagal! Anda tidak dapat men-scan meja diluar divisi anda: ' + seat.code);
   }
 
   async BookSeat(code: string, seat: SeatData) {
@@ -342,7 +327,7 @@ export class HomePage implements OnInit {
 
             if (!result) throw new Error('Gagal book');
 
-            this.InitializeData();
+            this.InitializeAllData();
             this.globalService.LogToast('Berhasil book');
             await loading.dismiss();
           } catch (error: any) {
@@ -407,7 +392,7 @@ export class HomePage implements OnInit {
 
             if (!result) throw new Error('Gagal withdraw');
 
-            this.InitializeData();
+            this.InitializeAllData();
             this.globalService.LogToast('Berhasil withdraw');
             await loading.dismiss();
           } catch (error: any) {

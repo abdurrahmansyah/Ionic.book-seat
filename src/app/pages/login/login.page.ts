@@ -15,6 +15,9 @@ import { GlobalService } from 'src/app/services/global.service';
 export class LoginPage implements OnInit {
   email: string = '';
   password: string = '';
+  passwordType: string = 'password';
+  passwordShown: boolean = false;
+  iconName: string = 'eye';
 
   dummyUser = {
     "id": 9853,
@@ -79,5 +82,17 @@ export class LoginPage implements OnInit {
     if (!this.email) throw ('Email tidak boleh kosong!');
     if (!this.password) throw ('Password tidak boleh kosong!');
     this.email = this.email.toLowerCase();
+  }
+
+  public togglePass() {
+    if (this.passwordShown) {
+      this.passwordShown = false;
+      this.passwordType = 'password';
+      this.iconName = 'eye';
+    } else {
+      this.passwordShown = true;
+      this.passwordType = '';
+      this.iconName = 'eye-off';
+    }
   }
 }

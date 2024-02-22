@@ -7,7 +7,7 @@
       <img *ngIf="isLoaded" class="denah-utama" src={{imageDenah}}>
       <ion-skeleton-text *ngIf="!isLoaded" [animated]="true" class="skeleton-denah"></ion-skeleton-text>
       <div class="denah-addon">
-        <img class="ion-padding" *ngIf="isLoaded" src='../../../assets/images/denah/SIT000.png'>
+        <img class="ion-padding" *ngIf="isLoaded && imageDenahMap" src={{imageDenahMap}}>
       </div>
       <div *ngFor="let x of denahBookedSeat" class="denah-addon">
         <img class="ion-padding" *ngIf="isLoaded" src='{{x}}'>
@@ -55,6 +55,7 @@
           </ion-accordion-group>
         </div>
       </div>
+      <hr *ngIf="bookedSeatData" style="height: 60px;">
     </div>
 
     <div *ngIf="segment === 'users'" class="scrollYnew ion-padding">
@@ -113,6 +114,7 @@
           </div>
         </div>
       </div>
+      <hr *ngIf="bookedSeatData" style="height: 60px;">
     </div>
   </div>
 
@@ -121,11 +123,6 @@
       <ion-icon name="scan"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <!-- <ion-fab *ngIf="!bookedSeatData" vertical="bottom" horizontal="start">
-    <ion-fab-button (click)="ScanSementara()" color="secondary">
-      <ion-icon name="scan"></ion-icon>
-    </ion-fab-button>
-  </ion-fab> -->
 
   <div *ngIf="bookedSeatData" class="ion-text-center" style="position: absolute; bottom: 0px; width: 100%;">
     <div class="ion-margin">

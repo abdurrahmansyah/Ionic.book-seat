@@ -157,6 +157,9 @@ export var dataTemp = {
         "public": "public"
     },
     divisi_name: {
-        SIT: "Divisi Sistem, TI & Riset Teknologi"
+        SIT: "Divisi Sistem, TI & Riset Teknologi",
+        SEKPER: "Sekretaris Perusahaan",
+        QHSSE: "Divisi QHSSE",
+        SPI: "Satuan Pengawas Internal",
     }
 }
