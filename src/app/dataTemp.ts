@@ -157,9 +157,12 @@ export var dataTemp = {
         "public": "public"
     },
     divisi_name: {
-        SIT: "Divisi Sistem, TI & Riset Teknologi",
+        ETI: "Divisi Engineering & TI",
         SEKPER: "Sekretaris Perusahaan",
         QHSSE: "Divisi QHSSE",
         SPI: "Satuan Pengawas Internal",
+        CP: "Divisi Corporate Planning",
+        HC: "Divisi Human Capital",
+        RJT: "Divisi Perencanaan Jalan Tol",
     }
 }

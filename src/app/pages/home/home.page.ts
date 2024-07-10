@@ -60,30 +60,38 @@ export class HomePage implements OnInit {
   }
 
   async InitializeApp() {
-    const requestPermissions = await BarcodeScanner.requestPermissions().catch((err) => { throw err.message });
+    // const requestPermissions = await BarcodeScanner.requestPermissions().catch((err) => { throw err.message });
     this.isIOS = this.platform.is('ios') ? true : false;
   }
 
   async InitializeAllData() {
-    if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SIT) {
+    console.log('userData', this.globalService.userData);
+    
+    this.imageDenahMap = null;
+    if (this.globalService.userData.divisi_name == dataTemp.divisi_name.ETI) {
       this.imageDenah = '../../../assets/images/denah/SIT.png';
       this.imageDenahMap = '../../../assets/images/denah/SIT000.png';
     }
     else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SEKPER) {
       this.imageDenah = '../../../assets/images/denah/SEKPER.jpeg';
-      this.imageDenahMap = null;
     }
     else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.QHSSE) {
       this.imageDenah = '../../../assets/images/denah/QHSSE.jpeg';
-      this.imageDenahMap = null;
     }
     else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SPI) {
       this.imageDenah = '../../../assets/images/denah/SPI.jpeg';
-      this.imageDenahMap = null;
+    }
+    else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.CP) {
+      this.imageDenah = '../../../assets/images/denah/CP.jpeg';
+    }
+    else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.HC) {
+      this.imageDenah = '../../../assets/images/denah/HC.jpeg';
+    }
+    else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.RJT) {
+      this.imageDenah = '../../../assets/images/denah/RJT.png';
     }
     else {
       this.imageDenah = '../../../assets/images/denah/SIT.png';
-      this.imageDenahMap = null;
     }
 
     await this.InitializeData();
