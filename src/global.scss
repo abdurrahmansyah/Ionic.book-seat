@@ -25,14 +25,24 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+// ion-content {
+//     --background: #F5F8FA;
+// }
+
 ion-content {
-    --background: #F5F8FA;
+    --background: var(--ion-color-rid-tweet);
 }
 
+ion-item {
+    --color: var(--ion-color-rid-goodgreen-two);
+}
 
-// ion-alert {
-//     .kode-meja {
-//         min-height: 550px;
-//         color: var(--ion-color-primary);
-//     }
-// }
+ion-fab-button {
+    --background: var(--ion-color-rid-goodblue-two)
+}
+
+ion-modal {
+    &.transparent-modal {
+        --background: transparent;
+    }
+}

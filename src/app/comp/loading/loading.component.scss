@@ -1,0 +1,48 @@
+.container {
+    position: relative;
+    height: 100%;
+    // background-color: lightgrey; /* For visibility of the example */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.full-height-div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@-webkit-keyframes rotate-center {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes rotate-center {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+.rotate-center {
+    -webkit-animation: rotate-center 1.2s cubic-bezier(.77, 0.000, .175, 1.000) infinite both;
+    animation: rotate-center 1.2s cubic-bezier(.77, 0.000, .175, 1.000) infinite both
+}

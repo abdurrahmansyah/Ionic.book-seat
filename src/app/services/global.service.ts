@@ -1,8 +1,10 @@
 import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { dataTemp } from '../dataTemp';
+import { BookSeatData } from './fetch.service';
+import { LoadingComponent } from '../comp/loading/loading.component';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +12,12 @@ import { dataTemp } from '../dataTemp';
 export class GlobalService {
   userData: any;
   isUserDataLoad: boolean = false;
+  bookedSeatData: BookSeatData | undefined;
 
   constructor(
     private toastController: ToastController,
     private alertController: AlertController,
+    private modalController: ModalController
   ) { }
 
   public GetDate(param?: any): DateData {
@@ -39,6 +43,7 @@ export class GlobalService {
     dateData.todayFormatted = formatDate(date, 'YYYY-MM-dd', 'en-US');
     dateData.todayDateTimeFormatted = formatDate(date, 'YYYY-MM-dd HH:mm:ss', 'en-US');
     dateData.todayDateTimeFormattedWithoutSecond = formatDate(date, 'YYYY-MM-dd HH:mm', 'en-US');
+    dateData.todayTimeFormattedWithoutSecond = formatDate(date, 'HH:mm', 'en-US');
 
     return dateData;
   }
@@ -130,6 +135,18 @@ export class GlobalService {
       return alert.present();
     });
   }
+
+  async PresentLoading(): Promise<HTMLIonModalElement> {
+    console.log('Show Loading Modal');
+
+    const modal = await this.modalController.create({
+      component: LoadingComponent,
+      cssClass: 'transparent-modal'
+    });
+    await modal.present();
+
+    return modal;
+  }
 }
 
 export class DateData {
@@ -148,6 +165,7 @@ export class DateData {
   public todayFormatted: string = '';
   public todayDateTimeFormatted: string = '';
   public todayDateTimeFormattedWithoutSecond: string = '';
+  public todayTimeFormattedWithoutSecond: string = '';
 
   constructor() { }
 }

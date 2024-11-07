@@ -84,7 +84,9 @@ export var dataTemp = {
         'authAD': url.url + 'authAD',
         'loginSSO': url.url + 'loginSSO',
         'loginHITS': url.urlHITS + 'login',
-        'login': url.url + 'login'
+        'login': url.url + 'login',
+        'getAttendancePerdate': url.url + 'attendance/perdate',
+        'createAbsen': url.url + 'attendance/request2'
     },
     userGroup: {
         'divisiSIT': '1489',
@@ -164,5 +166,21 @@ export var dataTemp = {
         CP: "Divisi Corporate Planning",
         HC: "Divisi Human Capital",
         RJT: "Divisi Perencanaan Jalan Tol",
+        DPR: "Divisi Pengelolaan Risiko",
+    },
+    attendance_type: {
+        postman: 'POSTMAN',
+        hkabsenAndroid: 'Mobile HK Absen - Android',
+        hkabsenIos: 'Mobile HK Absen - iOS',
+        hitsAndroid: 'Mobile HITS - Android',
+        hitsIos: 'Mobile HITS - iOS',
+        bookseatAndroid: 'Mobile Book Seat - Android',
+        bookseatIos: 'Mobile Book Seat - iOS'
+    },
+    work_from: {
+        wfo: 'WFO',
+        wfoproyek: 'WFO - Proyek',
+        wfh: 'WFH',
+        perjalananDinas: 'Perjalanan Dinas'
     }
 }

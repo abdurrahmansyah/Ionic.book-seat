@@ -90,6 +90,9 @@ export class HomePage implements OnInit {
     else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.RJT) {
       this.imageDenah = '../../../assets/images/denah/RJT.png';
     }
+    else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.DPR) {
+      this.imageDenah = '../../../assets/images/denah/DPR.jpeg';
+    }
     else {
       this.imageDenah = '../../../assets/images/denah/SIT.png';
     }
@@ -122,6 +125,7 @@ export class HomePage implements OnInit {
       });
 
       this.bookedSeatData = this.bookSeatDataList.find(x => x.employee_id[0] == this.globalService.userData.id);
+      this.globalService.bookedSeatData = this.bookedSeatData;
       if (this.bookedSeatData) this.isAlreadyBook = true;
     } else {
       this.bookedSeatData = undefined;
