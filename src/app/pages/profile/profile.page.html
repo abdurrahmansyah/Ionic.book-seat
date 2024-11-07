@@ -1,16 +1,76 @@
 <ion-content [fullscreen]="true">
   <div style="padding: 50px 30px 0px 30px;">
-    <ion-text style="font-size: 30px; font-weight: 700;">Profil</ion-text><br>
-    <ion-text style="font-weight: 700;">Hi, </ion-text>
+    <ion-text style="font-size: 30px; font-weight: 700;" color="rid-goodgreen-two">Profil</ion-text><br>
+    <!-- <ion-text style="font-weight: 700;">Hi, </ion-text>
     <ion-text *ngIf="userData; else basic" style="font-weight: 700;">{{userData.name}}</ion-text>
     <ng-template #basic>
       <ion-text style="font-weight: 700;">(Nama kamu)</ion-text>
-    </ng-template>
+    </ng-template> -->
   </div>
 
-  <ion-fab style="margin-top: 80px;" vertical="top" horizontal="end">
+  <div class="ion-padding">
+    <ion-card mode="ios" color="rid-goodgreen-two" class="ion-no-margin">
+      <ion-card-header>
+        <ion-card-title class="ion-text-nowrap"
+          style="overflow: hidden !important; text-overflow: ellipsis;">{{userData.name}}</ion-card-title>
+        <ion-card-subtitle>Informasi Karyawan</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>{{userData.divisi_name}}</ion-card-content>
+
+      <ion-item>
+        <ion-label>Book Seat Hari Ini</ion-label>
+        <ion-text *ngIf="bookedSeatData">{{bookedSeatData.code_id[1]}}</ion-text>
+      </ion-item>
+    </ion-card>
+    <br>
+
+    <ion-card mode="ios" class="ion-no-margin" (click)="Absen()">
+      <ion-item>
+        <ion-label>Absen Datang</ion-label>
+        <ion-text *ngIf="checkIn">{{checkIn}}</ion-text>
+        <ion-text *ngIf="!checkIn" color="rid-goodred-two">(Belum Absen)</ion-text>
+      </ion-item>
+
+      <ion-item *ngIf="attendanceData">
+        <ion-label></ion-label>
+        <ion-text *ngIf="checkIn">{{attendanceData.check_in_location}}</ion-text>
+      </ion-item>
+      <ion-item *ngIf="attendanceData">
+        <ion-label></ion-label>
+        <ion-text *ngIf="checkIn">{{attendanceData.attendance_type_in}}</ion-text>
+      </ion-item>
+    </ion-card>
+    <br>
+
+    <ion-card mode="ios" class="ion-no-margin" (click)="Absen()">
+      <ion-item>
+        <ion-label>Absen Pulang</ion-label>
+        <ion-text *ngIf="checkOut">{{checkOut}}</ion-text>
+        <ion-text *ngIf="!checkOut" color="rid-goodred-two">(Belum Absen)</ion-text>
+        <!-- <ng-template #belumAbsen>
+          <ion-text color="rid-goodred-two">(Belum Absen)</ion-text>
+        </ng-template> -->
+      </ion-item>
+    </ion-card>
+    <br>
+
+    <ion-card mode="ios" class="ion-no-margin">
+      <ion-item color="rid-goodcream-two" detail class="ion-activatable" (click)="Logout()">
+        <ion-label>Logout</ion-label>
+      </ion-item>
+      <ion-ripple-effect></ion-ripple-effect>
+    </ion-card>
+  </div>
+  <!-- <ion-fab style="margin-top: 80px;" vertical="top" horizontal="end">
     <ion-fab-button (click)="Logout()" color="secondary">
       <ion-icon name="log-out"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 </ion-content>
+
+<!-- <ion-content [fullscreen]="true">
+  <div class="flexContainer">
+    
+  </div>
+</ion-content> -->

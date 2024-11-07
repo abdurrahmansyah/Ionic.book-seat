@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { dataTemp } from '../dataTemp';
 import { InjectorInstance } from '../app.module';
 import { catchError, take } from 'rxjs';
+import { GlobalService } from './global.service';
 
 export interface SeatData {
   id?: string,
@@ -44,13 +45,43 @@ export interface UserGroupData {
   bookedSeatData?: BookSeatData
 }
 
+export interface AttendanceData {
+  // id?: string,
+  attendance_type: string,
+  authorization: string,
+  absen_date: string,
+  time: string,
+  // capture_image: string,
+  // capture_ext: string
+  work_from: string
+  location: string
+  kota: string
+  provinsi: string
+  activity_id: string
+  reason: string
+  // dectotal: string
+  // health_check: string
+  // suhu: string
+  // interaksi: string
+  // riwayat_sakit: string
+  // kendaraan: string
+  // rencana_keluar: string
+  // external: string
+  // kondisi_keluarga: string
+  // waktu_olahraga: string
+  is_request: string
+  status: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class FetchService {
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient,
+    public globalService: GlobalService
+  ) { }
 
   GetSeat() {
     return this.httpClient.get(dataTemp.url.getSeat);
@@ -166,6 +197,32 @@ export class FetchService {
 
   GetUsersByDivisiId(divisi_id: string) {
     return this.httpClient.get(dataTemp.url.getUsersByDivisiId, { params: { 'divisi_id': divisi_id } });
+  }
+
+  CreateAttendance(attendanceData: AttendanceData) {
+    let postdata = new FormData();
+    postdata.append('attendance_type', attendanceData.attendance_type);
+    postdata.append('authorization', attendanceData.authorization);
+    postdata.append('absen_date', attendanceData.absen_date);
+    postdata.append('time', attendanceData.time);
+    postdata.append('work_from', attendanceData.work_from);
+    postdata.append('location', attendanceData.location);
+    postdata.append('kota', attendanceData.kota);
+    postdata.append('provinsi', attendanceData.provinsi);
+    postdata.append('activity_id', attendanceData.activity_id);
+    postdata.append('reason', attendanceData.reason);
+    postdata.append('is_request', attendanceData.is_request);
+    postdata.append('status', attendanceData.status);
+
+    return this.httpClient.post(dataTemp.url.createAbsen, postdata);
+  }
+
+  GetAttendancePerdate(date: string) {
+    let postdata = new FormData();
+    postdata.append('authorization', this.globalService.userData.token);
+    postdata.append('date', date);
+
+    return this.httpClient.post(dataTemp.url.getAttendancePerdate, postdata);
   }
 
   async Login(username: string, password: string) {
