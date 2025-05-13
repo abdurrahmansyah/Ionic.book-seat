@@ -54,6 +54,7 @@ export class DataTempClass {
 
 export var dataTemp = {
     status: {
+        'aktif': 'aktif',
         'active': 'active',
         'inactive': 'inactive',
     },
@@ -182,5 +183,20 @@ export var dataTemp = {
         wfoproyek: 'WFO - Proyek',
         wfh: 'WFH',
         perjalananDinas: 'Perjalanan Dinas'
+    },
+    location: {
+        hktower: 'HK Tower',
+        jakartatimur: 'Kota Jakarta Timur',
+        dkijakarta: 'Daerah Khusus Ibukota Jakarta'
+    },
+    attendance_activity: {
+        wfo_id: '22',
+        wfo_reason: 'WFO - New Normal',
+        wfoproyek_id: '23',
+        wfoproyek_reason: 'WFO - Absen Proyek',
+        wfh_id: '24',
+        wfh_reason: 'WFH',
+        dinas_id: '25',
+        dinas_reason: 'Perjalanan Dinas',
     }
 }

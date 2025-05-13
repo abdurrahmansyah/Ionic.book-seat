@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Position } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
+import { take } from 'rxjs';
 import { dataTemp } from 'src/app/dataTemp';
 import { AuthService } from 'src/app/services/auth.service';
 import { AttendanceData, BookSeatData, FetchService } from 'src/app/services/fetch.service';
@@ -55,6 +56,11 @@ export class ProfilePage implements OnInit {
   }
 
   async InitializeData() {
+    await this.InitializeBookSeatData();
+    await this.InitializeAttendanceData();
+  }
+
+  private async InitializeBookSeatData() {
     this.bookSeatDataList = await this.GetBookSeatByDateAndDivisiId(this.globalService.userData.divisi_id);
 
     if (this.bookSeatDataList.length > 0) {
@@ -66,12 +72,6 @@ export class ProfilePage implements OnInit {
       this.isAlreadyBook = false;
     }
     console.log('this.bookedSeatData', this.bookedSeatData);
-
-    this.attendanceData = await this.GetAttendancePerdate();
-    console.log('this.attendanceData', this.attendanceData);
-
-    this.checkIn = this.attendanceData ? this.attendanceData.check_in_display.split(' ')[1] : undefined;
-    this.checkOut = this.attendanceData ? this.attendanceData.check_out_display ? this.attendanceData.check_out_display.split(' ')[1] : undefined : undefined;
   }
 
   private async GetBookSeatByDateAndDivisiId(divisi_id: string): Promise<BookSeatData[]> {
@@ -83,6 +83,14 @@ export class ProfilePage implements OnInit {
 
     // if (resBookSeatByDate.response == 'failed') throw (resBookSeatByDate.data);
     return resBookSeatByDate.data;
+  }
+
+  private async InitializeAttendanceData() {
+    this.attendanceData = await this.GetAttendancePerdate();
+    console.log('this.attendanceData', this.attendanceData);
+
+    this.checkIn = this.attendanceData ? this.attendanceData.check_in_display.split(' ')[1] : undefined;
+    this.checkOut = this.attendanceData ? this.attendanceData.check_out_display ? this.attendanceData.check_out_display.split(' ')[1] : undefined : undefined;
   }
 
   private async GetAttendancePerdate(): Promise<BookSeatData[] | undefined> {
@@ -97,23 +105,24 @@ export class ProfilePage implements OnInit {
   }
 
   async Absen() {
-    console.log('absen');
+    console.log('LOG: Do Absen...');
     const loading = await this.globalService.PresentLoading();
 
     try {
       const coordinates = await this.geolocationService.getCurrentPosition();
-      const address = this.geolocationService.ReadGeocode(coordinates.coords.latitude, coordinates.coords.longitude);
+      // const address = this.geolocationService.ReadGeocode(coordinates.coords.latitude, coordinates.coords.longitude);
       const isHKTower = this.ValidateLocationHKTower(coordinates);
-      console.log('address', address);
+      // console.log('address', address);
       console.log('isHKTower', isHKTower);
+      if (!isHKTower) throw 'Anda saat ini sedang berada diluar HK Tower. Silahkan absen menggunakan aplikasi HITS!'
 
-      // var result = await this.CreateAttendance(coordinates, isHKTower);
-      // console.log('result', result);
+      var result = await this.CreateAttendance();
+      console.log('result', result);
 
-      // if (!result) throw new Error('Gagal book');
+      // if (!result) throw new Error('Gagal melakukan absen. Coba beberapa saat lagi!');
 
-      // this.InitializeAllData();
-      // this.globalService.LogToast('Berhasil book');
+      this.InitializeAttendanceData();
+      this.globalService.LogToast('Berhasil melakukan absen');
       loading.dismiss();
     } catch (error: any) {
       this.globalService.LogAlert(error);
@@ -135,29 +144,31 @@ export class ProfilePage implements OnInit {
     else return false;
   }
 
-  private async CreateAttendance(coordinates: Position, isHKTower: boolean) {
-    // const attendanceData: AttendanceData = {
-    //   attendance_type: this.platform.is('ios') ? dataTemp.attendance_type.bookseatIos : dataTemp.attendance_type.bookseatAndroid,
-    //   authorization: this.globalService.userData.token,
-    //   absen_date: this.globalService.GetDate().todayFormatted,
-    //   time: this.globalService.GetDate().todayTimeFormattedWithoutSecond,
-    //   work_from: isHKTower ? dataTemp.work_from.wfo : dataTemp.work_from.wfoproyek,
-    //   location: seat_id,
-    //   kota: seat_id,
-    //   provinsi: seat_id,
-    //   activity_id: seat_id,
-    //   reason: seat_id,
-    //   is_request: seat_id,
-    //   status: dataTemp.status.active,
-    // };
-    // console.log('bookSeatData', attendanceData);
-    // const id = this.fetchService.CreateAttendance(attendanceData);
-    // var result: any = await new Promise(resolve => {
-    //   id.pipe(take(1)).subscribe((data: any) => {
-    //     resolve(data);
-    //   });
-    // });
+  private async CreateAttendance() {
+    const attendanceData: AttendanceData = {
+      attendance_type: this.platform.is('ios') ? dataTemp.attendance_type.bookseatIos : dataTemp.attendance_type.bookseatAndroid,
+      authorization: this.globalService.userData.token,
+      absen_date: this.globalService.GetDate().todayFormatted,
+      time: this.globalService.GetDate().todayTimeFormattedWithoutSecond,
+      work_from: dataTemp.work_from.wfo,
+      location: dataTemp.location.hktower,
+      kota: dataTemp.location.jakartatimur,
+      provinsi: dataTemp.location.dkijakarta,
+      activity_id: dataTemp.attendance_activity.wfo_id,
+      reason: dataTemp.attendance_activity.wfo_reason,
+      is_request: '1',
+      status: dataTemp.status.aktif,
+    };
+    console.log('attendanceData', attendanceData);
+    const id = this.fetchService.CreateAttendance(attendanceData);
+    var result: any = await new Promise((resolve, reject) => {
+      id.pipe(take(1)).subscribe((data: any) => {
+        resolve(data);
+      }, (error: any) => {
+        reject('Gagal melakukan absen. Coba beberapa saat lagi!');
+      });
+    });
 
-    // return result;
+    return result.data;
   }
 }

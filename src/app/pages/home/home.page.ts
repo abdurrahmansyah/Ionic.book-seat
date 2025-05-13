@@ -69,8 +69,9 @@ export class HomePage implements OnInit {
     
     this.imageDenahMap = null;
     if (this.globalService.userData.divisi_name == dataTemp.divisi_name.ETI) {
-      this.imageDenah = '../../../assets/images/denah/SIT.png';
-      this.imageDenahMap = '../../../assets/images/denah/SIT000.png';
+      // this.imageDenah = '../../../assets/images/denah/SIT.png';
+      this.imageDenah = '../../../assets/images/denah/ETIx.jpeg';
+      // this.imageDenahMap = '../../../assets/images/denah/SIT000.png';
     }
     else if (this.globalService.userData.divisi_name == dataTemp.divisi_name.SEKPER) {
       this.imageDenah = '../../../assets/images/denah/SEKPER.jpeg';
@@ -116,9 +117,9 @@ export class HomePage implements OnInit {
     if (this.bookSeatDataList.length > 0) {
       seatDataList.forEach(seat => {
         seat.bookedSeatData = this.bookSeatDataList.find(x => x.code_id[0] == seat.id);
-        if (this.bookSeatDataList.filter(x => x.code_id[0] == seat.id).length > 0) {
-          this.denahBookedSeat.push('../../../assets/images/denah/' + seat.code + '.png');
-        }
+        // if (this.bookSeatDataList.filter(x => x.code_id[0] == seat.id).length > 0) {
+        //   this.denahBookedSeat.push('../../../assets/images/denah/' + seat.code + '.png');
+        // }
       });
       this.userGroupDataList.forEach(user => {
         user.bookedSeatData = this.bookSeatDataList.find(x => x.employee_id[0] == user.id);

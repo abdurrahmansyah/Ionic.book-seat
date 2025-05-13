@@ -21,8 +21,6 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
-    "@awesome-cordova-plugins/core": "^6.9.0",
-    "@awesome-cordova-plugins/native-geocoder": "^6.9.0",
     "@capacitor-mlkit/barcode-scanning": "^5.3.0",
     "@capacitor/android": "5.3.0",
     "@capacitor/app": "5.0.6",

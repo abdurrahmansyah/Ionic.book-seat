@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Geolocation, Position } from '@capacitor/geolocation';
 import { GlobalService } from './global.service';
-import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@awesome-cordova-plugins/native-geocoder/ngx';
+// import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@awesome-cordova-plugins/native-geocoder/ngx';
 import { Platform } from '@ionic/angular';
 
 @Injectable({
@@ -10,16 +10,14 @@ import { Platform } from '@ionic/angular';
 export class GeolocationService {
 
   constructor(private globalService: GlobalService,
-    private nativeGeocoder: NativeGeocoder,
+    // private nativeGeocoder: NativeGeocoder,
     public platform: Platform
   ) { }
 
   async getCurrentPosition(): Promise<Position> {
-    this.globalService.PresentAlert('start getCurrentPosition...')
-
+    console.log('LOG: Start getCurrentPosition...');
+    
     const coordinates = await Geolocation.getCurrentPosition();
-
-    console.log('Current position:', coordinates);
     return coordinates;
   }
 
@@ -30,11 +28,11 @@ export class GeolocationService {
     //   });
     // });
 
-    const result: any = await new Promise(resolve => {
-      this.nativeGeocoder.reverseGeocode(latitude, longitude, { useLocale: true, maxResults: 5 }).then(result => {
-        resolve(result);
-      });
-    });
+    // const result: any = await new Promise(resolve => {
+    //   this.nativeGeocoder.reverseGeocode(latitude, longitude, { useLocale: true, maxResults: 5 }).then(result => {
+    //     resolve(result);
+    //   });
+    // });
     // await this.nativeGeocoder.reverseGeocode(latitude, longitude, { useLocale: true, maxResults: 5 })
     //   .then((result: NativeGeocoderResult[]) => {
     //     if (this.platform.is('ios'))
