@@ -120,14 +120,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Capacitor: 1ac9165943bc4f2137642d218c5ba05df811de69
-  CapacitorApp: 963d90cb449803d58efc33bb515c81151e69159d
-  CapacitorCamera: 3e59d65f0f98bde8d1868ee8514078dc8e96961b
+  CapacitorApp: 024e1b1bea5f883d79f6330d309bc441c88ad04a
+  CapacitorCamera: 084b0b228bba7d00587910337b1c89e93b1d32ab
   CapacitorCordova: b9374d68e63ce29e96ab5db994cf14fbefd722c9
-  CapacitorHaptics: 186982679c5f4005d1e6d2c719b8251c0d3a6df8
-  CapacitorKeyboard: 2f3296af2bc929a5069f02ed264fdce58ed62028
-  CapacitorMlkitBarcodeScanning: ed3b9489b0ff26f6ce04dfa99cbad5516ffd9327
-  CapacitorPreferences: 8053abfef3bd11e3e83834792a97e5a6387bf591
-  CapacitorStatusBar: a73a9ae0dd2ca30ee429782d5d3ae82dcfa80207
+  CapacitorHaptics: 1fffc1217c7e64a472d7845be50fb0c2f7d4204c
+  CapacitorKeyboard: b978154b024a5f65e044908e37d15b7de58b9d12
+  CapacitorMlkitBarcodeScanning: ea08ef246e5d3511d5a231a59fae36b16ad9acb3
+  CapacitorPreferences: f03954bcb0ff09c792909e46bff88e3183c16b10
+  CapacitorStatusBar: 565c0a1ebd79bb40d797606a8992b4a105885309
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
   GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
@@ -143,4 +143,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a44a7b0d656661eeec2b38495cb7af03f18a2a2b
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3
